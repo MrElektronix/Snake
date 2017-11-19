@@ -4,19 +4,23 @@ let game = new Phaser.Game(800, 600, Phaser.AUTO, 'canvas', {preload: preload, c
 function preload(){
 	game.load.image('block', 'images/block.png');
 	game.load.image('background', 'images/greengrass.jpg');
+	game.load.image('apple', 'images/apple.png')
 }
 
 var head;
-var headXSpeed;
-var headYSpeed;
+var bodyparts;
+var apple;
 
+var numberOfBodyParts;
+var snakePath;
 var speed;
+var spacebetween;
+
 
 var W;
 var A;
 var S;
 var D;
-
 
 function create(){
 	game.physics.startSystem(Phaser.Physics.ARCADE);
@@ -25,22 +29,30 @@ function create(){
 	
 	head = game.add.sprite(500, 500, 'block');
 	head.scale.setTo(0.1, 0.1);
-	headXSpeed = 0;
-	headYSpeed = 0;
 	
-	speed = 5;
+	game.physics.arcade.enable(head);
+	
+	numberOfBodyParts = 0;
+	bodyparts = [];
+	snakePath = [];
+	spacebetween = 5;
+	speed = 300;
 	
 	W = game.input.keyboard.addKey(Phaser.Keyboard.W);
 	A = game.input.keyboard.addKey(Phaser.Keyboard.A);
 	S = game.input.keyboard.addKey(Phaser.Keyboard.S);
 	D = game.input.keyboard.addKey(Phaser.Keyboard.D);
+	
+	SpawnApple();
+	
 }
 
 function update(){
-	head.x += headXSpeed;
-	head.y += headYSpeed;
-	
+
 	Keyboard(head);
+
+	game.physics.arcade.overlap(head, apple, SpawnApple, null, this);
+	
 }
 
 function Keyboard(object){
@@ -61,34 +73,72 @@ function Keyboard(object){
 	}	
 }
 
+function FollowSnake(){
+	for (var i = 0; i < bodyparts.length; i++){
+		var position = snakePath[i];
+		if (position == undefined) break;
+		
+		bodyparts[i].x = (snakePath[i * spacebetween]).x;
+		bodyparts[i].y = (snakePath[i * spacebetween]).y;
+	}
+}
 
 
 function ChangeDirection(object, direction){
 	switch(direction){
 		case "up":
-			headYSpeed = -speed;
-			headXSpeed = 0;
+			object.body.velocity.x = 0;
+			object.body.velocity.y = -speed;
 			break;
 		case "down":
-			headYSpeed = speed;
-			headXSpeed = 0;
+			object.body.velocity.x = 0;
+			object.body.velocity.y = speed;
 			break;
 		case "left":
-			headYSpeed = 0;
-			headXSpeed = -speed;
+			object.body.velocity.x = -speed;
+			object.body.velocity.y = 0;
 			break;
 		case "right":
-			headYSpeed = 0;
-			headXSpeed = speed;
+			object.body.velocity.x = speed;
+			object.body.velocity.y = 0;
 			break;	
 	}
 	
-	snakePath.unshift(
-		{
-			x: object.x,
-			y: object.y
-		}
-	);
+	snakePath.unshift({
+		x: object.x,
+		y: object.y
+	});
+	
+	
+	FollowSnake();
 }
+
+function SpawnApple(){
+	if (apple != undefined){
+		apple.destroy();
+		SpawnBodyPart();
+	} 
+	
+	var randomX = game.rnd.integerInRange(50, game.width - 50);
+	var randomY = game.rnd.integerInRange(50, game.height - 50);
+	
+	apple = game.add.sprite(randomX, randomY, 'apple');
+	apple.scale.setTo(0.06, 0.06);
+	
+	game.physics.enable(apple, Phaser.Physics.ARCADE);
+	
+	apple.body.immovable = true;
+}
+
+function SpawnBodyPart(){
+	numberOfBodyParts++;
+	
+	for (var i = 0; i < numberOfBodyParts; i++){
+		bodyparts[i] = game.add.sprite(500, 500, 'block');
+		bodyparts[i].scale.setTo(0.1, 0.1);
+	}
+}
+
+
 
 
