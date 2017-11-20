@@ -1,9 +1,8 @@
-let game = new Phaser.Game(800, 600, Phaser.AUTO, 'canvas', {preload: preload, create: create, update: update});
+let game = new Phaser.Game(600, 500, Phaser.AUTO, 'canvas', {preload: preload, create: create, update: update});
 
 
 function preload(){
 	game.load.image('block', 'images/block.png');
-	game.load.image('background', 'images/greengrass.jpg');
 	game.load.image('apple', 'images/apple.png')
 }
 
@@ -16,7 +15,6 @@ var snakePath;
 var speed;
 var spacebetween;
 
-
 var W;
 var A;
 var S;
@@ -25,10 +23,9 @@ var D;
 function create(){
 	game.physics.startSystem(Phaser.Physics.ARCADE);
 	
-	var background = game.add.sprite(0, 0, 'background');
-	
-	head = game.add.sprite(500, 500, 'block');
-	head.scale.setTo(0.1, 0.1);
+	game.stage.backgroundColor = "#ffffff";
+	head = game.add.sprite(game.width - 100, game.height - 100, 'block');
+	head.scale.setTo(0.06, 0.06);
 	
 	game.physics.arcade.enable(head);
 	
@@ -48,11 +45,14 @@ function create(){
 }
 
 function update(){
-
 	Keyboard(head);
-
-	game.physics.arcade.overlap(head, apple, SpawnApple, null, this);
 	
+	snakePath.unshift({
+		x: head.x,
+		y: head.y
+	});	
+	FollowSnake();
+	game.physics.arcade.overlap(head, apple, SpawnApple, null, this);
 }
 
 function Keyboard(object){
@@ -74,9 +74,8 @@ function Keyboard(object){
 }
 
 function FollowSnake(){
-	for (var i = 0; i < bodyparts.length; i++){
+	for (var i = 1; i < numberOfBodyParts; i++){
 		var position = snakePath[i];
-		if (position == undefined) break;
 		
 		bodyparts[i].x = (snakePath[i * spacebetween]).x;
 		bodyparts[i].y = (snakePath[i * spacebetween]).y;
@@ -103,21 +102,14 @@ function ChangeDirection(object, direction){
 			object.body.velocity.y = 0;
 			break;	
 	}
-	
-	snakePath.unshift({
-		x: object.x,
-		y: object.y
-	});
-	
-	
-	FollowSnake();
 }
 
 function SpawnApple(){
 	if (apple != undefined){
 		apple.destroy();
 		SpawnBodyPart();
-	} 
+	}
+	
 	
 	var randomX = game.rnd.integerInRange(50, game.width - 50);
 	var randomY = game.rnd.integerInRange(50, game.height - 50);
@@ -132,13 +124,11 @@ function SpawnApple(){
 
 function SpawnBodyPart(){
 	numberOfBodyParts++;
+	bodyparts.push(game.add.sprite(game.width - 100, game.height - 100, 'block'));
+	
+	
 	
 	for (var i = 0; i < numberOfBodyParts; i++){
-		bodyparts[i] = game.add.sprite(500, 500, 'block');
-		bodyparts[i].scale.setTo(0.1, 0.1);
+		bodyparts[i].scale.setTo(0.06, 0.06);
 	}
 }
-
-
-
-
