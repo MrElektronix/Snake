@@ -11,30 +11,32 @@ class KeyBoard {
 	}
 	
 	start(){
-		this.W = this.game.input.keyboard.addKey(Phaser.Keyboard.W);
-		this.A = this.game.input.keyboard.addKey(Phaser.Keyboard.A);
-		this.S = this.game.input.keyboard.addKey(Phaser.Keyboard.S);
-		this.D = this.game.input.keyboard.addKey(Phaser.Keyboard.D);
+		this.Up = this.game.input.keyboard.addKey(Phaser.Keyboard.W);
+		this.Left = this.game.input.keyboard.addKey(Phaser.Keyboard.A);
+		this.Down = this.game.input.keyboard.addKey(Phaser.Keyboard.S);
+		this.Right = this.game.input.keyboard.addKey(Phaser.Keyboard.D);
 	}
 	
-	moveObject(object){
-		
-		if (this.W.isDown){
-			this.ChangeDirection(object, "up");
+	moveObject(object) {
+		if (this.Up.isDown && snake.direction != "down"){
+			this.ChangeDirection(snake.head, "up");
+			snake.direction = "up";
 		}
 		
-		if (this.A.isDown){
+		if (this.Left.isDown && snake.direction != "right"){
 			this.ChangeDirection(object, "left");
+			snake.direction = "left";
 		}
 		
-		if (this.S.isDown){
+		if (this.Down.isDown && snake.direction != "up"){
 			this.ChangeDirection(object, "down");
+			snake.direction = "down";
 		}
 		
-		if (this.D.isDown){
+		if (this.Right.isDown && snake.direction != "left"){
 			this.ChangeDirection(object, "right");
+			snake.direction = "right";
 		}
-		
 	}
 	
 	ChangeDirection(object, direction){
@@ -57,5 +59,4 @@ class KeyBoard {
 				break;	
 		}
 	}
-	
 }

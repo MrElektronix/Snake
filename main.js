@@ -12,6 +12,8 @@ var snake;
 var keyboard;
 
 var scoreText;
+var deathText;
+
 var score;
 
 function create(){
@@ -21,13 +23,15 @@ function create(){
 	
 	game.stage.backgroundColor = "#ffffff";
 	
-	snake = new Snake(500, 400, game);
+	snake = new Snake(400, 400, game);
 	keyboard = new KeyBoard(game);
 	
 	score = 0;
 	scoreText = game.add.text(10, 0, "Score: " + score, style);
 	
-	SpawnApple();	
+	
+	SpawnApple();
+	
 	
 }
 
@@ -54,4 +58,8 @@ function SpawnApple(){
 	
 	game.physics.enable(apple, Phaser.Physics.ARCADE);
 	apple.body.immovable = true;
+}
+
+function HelloWorld(){
+	console.log("hello world");
 }
