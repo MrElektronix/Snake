@@ -20,13 +20,11 @@ class Snake {
 	start(){
 		
 		this.direction = "";
-		this.textStyle = { font: "32px Arial", fill: "#FF0000"};
 		this.numberOfBodyParts = 0;
 		this.bodyparts = [];
 		this.snakePath = [];
 		this.spacebetween = 5;
 		this.speed = 300;
-		this.deathText = this.game.add.text(-300, 0, "You Died", this.textStyle);
 		this.head = this.game.add.sprite(this.x, this.y, 'block');
 		this.head.scale.setTo(0.06, 0.06);
 		
@@ -40,12 +38,6 @@ class Snake {
 		});
 		
 		this.followHead();
-		
-		for (var i = 2; i < this.numberOfBodyParts; i++){
-			this.selfCollision(this.bodyparts[i]);
-		}
-		
-		this.wallCollision();
 	}
 	
 	followHead(){
@@ -64,29 +56,6 @@ class Snake {
 		
 		for (var i = 0; i < this.numberOfBodyParts; i++){
 			this.bodyparts[i].scale.setTo(0.06, 0.06);
-		}
-	}
-	
-	selfCollision(object) {
-		if (this.head.x < object.x + object.width &&
-		   this.head.x + this.head.width > object.x &&
-		   this.head.y < object.y + object.height &&
-		   this.head.y + this.head.height > object.y){
-			this.head.body.velocity.x = 0;
-			this.head.body.velocity.y = 0;
-			
-			this.deathText.x = 225;
-			this.deathText.y = 225;
-		}
-	}
-	
-	wallCollision(){
-		if (this.head.x + this.head.width >= this.game.width || this.head.x < 0 || this.head.y + this.head.height >= this.game.height || this.head.y < 0){
-			this.head.body.velocity.x = 0;
-			this.head.body.velocity.y = 0;
-			
-			this.deathText.x = 225;
-			this.deathText.y = 225;
 		}
 	}
 }

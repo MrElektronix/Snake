@@ -3,7 +3,7 @@ let game = new Phaser.Game(600, 500, Phaser.AUTO, 'canvas', {preload: preload, c
 
 function preload(){
 	game.load.image('block', 'images/block.png');
-	game.load.image('apple', 'images/apple.png')
+	game.load.image('apple', 'images/apple.png');
 }
 
 
@@ -13,11 +13,13 @@ var keyboard;
 
 var scoreText;
 var deathText;
+var collision;
+var textstyle;
 
 var score;
 
 function create(){
-	var style = { font: "32px Arial", fill: "#ff0044"};
+	var textstyle = { font: "32px Arial", fill: "#ff0044"};
 	
 	game.physics.startSystem(Phaser.Physics.ARCADE);
 	
@@ -27,8 +29,9 @@ function create(){
 	keyboard = new KeyBoard(game);
 	
 	score = 0;
-	scoreText = game.add.text(10, 0, "Score: " + score, style);
-	
+	scoreText = game.add.text(10, 0, "Score: " + score, textstyle);
+	deathText = game.add.text(-300, 0, "You Died", textstyle);
+	collision = new Collision(game);
 	
 	SpawnApple();
 	
@@ -38,6 +41,16 @@ function create(){
 function update(){
 	keyboard.moveObject(snake.head);
 	snake.update();
+	
+	for (var i = 2; i < snake.numberOfBodyParts; i++){
+		if (collision.blockCollision(snake.head, snake.bodyparts[i])){
+			EndGame();
+		}
+	}
+	
+	if (collision.wallCollision(snake.head)){
+			EndGame();
+	}
 	
 	game.physics.arcade.overlap(snake.head, apple, SpawnApple, null, this);
 }
@@ -60,6 +73,10 @@ function SpawnApple(){
 	apple.body.immovable = true;
 }
 
-function HelloWorld(){
-	console.log("hello world");
+function EndGame(){
+	snake.head.body.velocity.x = 0;
+	snake.head.body.velocity.y = 0;
+			
+	deathText.x = 225;
+	deathText.y = 225;
 }
