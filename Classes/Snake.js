@@ -12,8 +12,6 @@ class Snake {
 		this.snakePath;
 		this.speed;
 		this.direction;
-		this.deathText;
-		this.textStyle;
 		this.start();
 	}
 	
