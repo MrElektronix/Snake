@@ -33,16 +33,16 @@ function create(){
 	deathText = game.add.text(-300, 0, "You Died", textstyle);
 	
 	SpawnApple();
+
+	snake.addListener("dead", function(e){
+		EndGame();
+	});
 	
 	
 }
 
 function update(){
 	snake.update();
-
-	snake.addListener("dead", function(e){
-		EndGame();
-	});
 	
 	game.physics.arcade.overlap(snake.head, apple, SpawnApple, null, this);
 }
