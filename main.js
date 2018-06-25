@@ -6,7 +6,6 @@ function preload(){
 	game.load.image('apple', 'images/apple.png');
 }
 
-
 var apple;
 var snake;
 var keyboard;
@@ -25,13 +24,13 @@ function create(){
 	
 	game.stage.backgroundColor = "#ffffff";
 	
-	snake = new Snake(400, 400, game);
+	collision = new Collision(game);
 	keyboard = new KeyBoard(game);
+	snake = new Snake(400, 400, game, keyboard, collision);
 	
 	score = 0;
 	scoreText = game.add.text(10, 0, "Score: " + score, textstyle);
 	deathText = game.add.text(-300, 0, "You Died", textstyle);
-	collision = new Collision(game);
 	
 	SpawnApple();
 	
@@ -39,18 +38,11 @@ function create(){
 }
 
 function update(){
-	keyboard.moveObject(snake.head);
 	snake.update();
-	
-	for (var i = 2; i < snake.numberOfBodyParts; i++){
-		if (collision.blockCollision(snake.head, snake.bodyparts[i])){
-			EndGame();
-		}
-	}
-	
-	if (collision.wallCollision(snake.head)){
-			EndGame();
-	}
+
+	snake.addListener("dead", function(e){
+		EndGame();
+	});
 	
 	game.physics.arcade.overlap(snake.head, apple, SpawnApple, null, this);
 }
