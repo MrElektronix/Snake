@@ -18,7 +18,6 @@ class Snake extends EventEmitter {
 	}
 	
 	start(){
-		
 		this.direction = "";
 		this.bodyparts = [];
 		this.snakePath = [];

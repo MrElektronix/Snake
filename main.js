@@ -37,14 +37,13 @@ function create(){
 	snake.addListener("dead", function(e){
 		EndGame();
 	});
-	
-	
 }
 
 function update(){
 	snake.update();
-	
-	game.physics.arcade.overlap(snake.head, apple, SpawnApple, null, this);
+	if (collision.blockCollision(snake.head, apple)){
+		SpawnApple();
+	}
 }
 
 function SpawnApple(){
