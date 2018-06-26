@@ -6,14 +6,6 @@ class Snake extends EventEmitter {
 		this.game = game;
 		this.keyboard = keyboard;
 		this.collision = collision;
-
-		this.head;
-		this.bodyparts;
-		
-		this.spacebetween;
-		this.snakePath;
-		this.speed;
-		this.direction;
 		this.start();
 	}
 	
@@ -63,22 +55,23 @@ class Snake extends EventEmitter {
 	}
 
 	ChangeDirection(object, direction){
+		let SetVelocity = (x, y)=>{
+			object.body.velocity.x = x;
+			object.body.velocity.y = y;
+		}
+
 		switch(direction){
 			case "up":
-				object.body.velocity.x = 0;
-				object.body.velocity.y = -snake.speed;
+				SetVelocity(0, -this.speed);
 				break;
 			case "down":
-				object.body.velocity.x = 0;
-				object.body.velocity.y = snake.speed;
+				SetVelocity(0, this.speed);
 				break;
 			case "left":
-				object.body.velocity.x = -snake.speed;
-				object.body.velocity.y = 0;
+			SetVelocity(-this.speed, 0);
 				break;
 			case "right":
-				object.body.velocity.x = snake.speed;
-				object.body.velocity.y = 0;
+				SetVelocity(this.speed, 0);
 				break;	
 		}
 	}
@@ -100,7 +93,6 @@ class Snake extends EventEmitter {
 			var position = this.snakePath[i];
 			if (position == undefined) break;
 			this.bodyparts[i].x = (this.snakePath[i * this.spacebetween + this.spacebetween]).x;
-	
 			this.bodyparts[i].y = (this.snakePath[i * this.spacebetween + this.spacebetween]).y;
 		}
 	}

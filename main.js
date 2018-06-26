@@ -8,12 +8,10 @@ function preload(){
 
 var apple;
 var snake;
-var keyboard;
 
 var scoreText;
 var deathText;
 var collision;
-var textstyle;
 
 var score;
 
@@ -25,7 +23,7 @@ function create(){
 	game.stage.backgroundColor = "#ffffff";
 	
 	collision = new Collision(game);
-	keyboard = new KeyBoard(game);
+	var keyboard = new KeyBoard(game);
 	snake = new Snake(400, 400, game, keyboard, collision);
 	
 	score = 0;
@@ -36,13 +34,16 @@ function create(){
 
 	snake.addListener("dead", function(e){
 		EndGame();
+		game.paused = true;
 	});
 }
 
 function update(){
-	snake.update();
-	if (collision.blockCollision(snake.head, apple)){
-		SpawnApple();
+	if (!game.paused){
+		snake.update();
+		if (collision.blockCollision(snake.head, apple)){
+			SpawnApple();
+		}
 	}
 }
 

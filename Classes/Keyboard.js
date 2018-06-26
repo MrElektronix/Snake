@@ -1,12 +1,6 @@
 class KeyBoard {
 	constructor(game){
 		this.game = game;
-		
-		this.Up;
-		this.Left;
-		this.Down;
-		this.Right;
-		
 		this.start();
 	}
 	
